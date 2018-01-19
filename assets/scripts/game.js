@@ -13,6 +13,8 @@ cc.Class({
 
 	properties: {
 
+		//asda
+
 		map: {
 			default: null,
 			type: cc.TiledMap,
