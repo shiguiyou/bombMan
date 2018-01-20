@@ -12,7 +12,7 @@ cc.Class({
 	extends: cc.Component,
 
 	properties: {
-
+		//sfsdfsdfsdfsdf
 		map: {
 			default: null,
 			type: cc.TiledMap,
