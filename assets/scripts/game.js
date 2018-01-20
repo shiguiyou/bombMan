@@ -13,11 +13,19 @@ cc.Class({
 
 	properties: {
 
-		//asda
-
 		map: {
 			default: null,
 			type: cc.TiledMap,
+		},
+
+		b1: {
+			default: null,
+			type: cc.TiledLayer,
+		},
+
+		b2: {
+			default: null,
+			type: cc.TiledLayer,
 		},
 
 		player: {
@@ -30,21 +38,14 @@ cc.Class({
 	// LIFE-CYCLE CALLBACKS:
 
 	onLoad() {
+
 		this.loadMap();
 	},
 
 	loadMap() {
-		this.tiledMap = this.node.getComponent(cc.TiledMap);
-		var player = this.node.getChildByName('player');
-		var playerPos = cc.p(player.x, player.y);
+
+		var playerPos = cc.p(this.player.x, this.player.y);
 		this.playerTile = this.getTilePos(playerPos);
-
-
-
-		// let playerObj = this.node.getChildByName('player');
-
-		// let playerPos = cc.p(playerObj.offset.x, playerObj.offset.y);
-		// this.playerTile = this.getTilePosition(playerPos);
 		// var newTile = cc.p(this.playerTile.x, this.playerTile.y);
 	},
 
@@ -52,7 +53,7 @@ cc.Class({
 	getTilePos: function(posInPixel) {
 		cc.log('getTilePos() : ' + posInPixel);
 		var mapSize = this.node.getContentSize();
-		var tileSize = this.tiledMap.getTileSize();
+		var tileSize = this.map.getTileSize();
 		var x = Math.floor(posInPixel.x / tileSize.width);
 		var y = Math.floor((mapSize.height - posInPixel.y) / tileSize.height);
 		return cc.p(x, y);
@@ -87,21 +88,27 @@ cc.Class({
 	},
 
 	tryMoveToNewTile: function(newTile) {
-		var mapSize = this.tiledMap.getMapSize();
-		cc.log(mapSize);
+		//15*15的大小
+		var mapSize = this.map.getMapSize();
 		if (newTile.x < 0 || newTile.x >= mapSize.width) return;
 		if (newTile.y < 0 || newTile.y >= mapSize.height) return;
 
-		// if (this.barriers.getTileGIDAt(newTile)) { //GID=0,则该Tile为空
-		// 	cc.log('This way is blocked!');
-		// 	return false;
-		// }
+		if (this.b1.getTileGIDAt(newTile)) { //GID=0,则该Tile为空
+			cc.log('This way is blocked!');
+			return false;
+		}
+
+		if (this.b2.getTileGIDAt(newTile)) { //GID=0,则该Tile为空
+			cc.log('This way is blocked!');
+			return false;
+		}
 
 		this.playerTile = newTile;
 		cc.log(this.playerTile);
 		// this.updatePlayerPos();
 
-		this.player.setPosition(this.playerTile);
+		var pos = this.b1.getPositionAt(this.playerTile);
+		this.player.setPosition(pos);
 	},
 
 	start() {
